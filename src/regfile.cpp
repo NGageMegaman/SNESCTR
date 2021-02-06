@@ -112,6 +112,21 @@ void Regfile::writeY(word data) {
     else Y = data & 0x00ff;
 }
 
+void Regfile::writeP(PFlags_t PFlag, bool value) {
+    switch (PFlag) {
+        case CARRY_FLAG:       P.C = value; break;
+        case ZERO_FLAG:        P.Z = value; break;
+        case OVERFLOW_FLAG:    P.V = value; break;
+        case NEGATIVE_FLAG:    P.N = value; break;
+        case DECIMAL_FLAG:     P.D = value; break;
+        case EMULATION_FLAG:   P.E = value; break;
+        case ACCUMULATOR_FLAG: P.M = value; break;
+        case INDEX_FLAG:       P.X = value; break;
+        case INTERRUPT_FLAG:   P.I = value; break;
+        default: return;
+    }
+}
+
 void Regfile::writeDP(word data) {
     DP = data;
 }

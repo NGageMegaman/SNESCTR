@@ -30,6 +30,7 @@ class Regfile {
         void writeA(word data);
         void writeX(word data);
         void writeY(word data);
+        void writeP(PFlags_t PFlag, bool value);
         void writeDP(word data);
         void writeSP(word data);
         void writePC(word data);
