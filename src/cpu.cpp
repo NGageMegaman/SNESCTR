@@ -5,6 +5,7 @@ CPU::CPU() {
     mem = Mem::getInstance();
     regfile = Regfile::getInstance();
     decoder = Decoder::getInstance();
+    executionUnit = ExecutionUnit::getInstance();
     
     uint16_t resetAddress = mem->readWord(RESET_VECTOR);
     regfile->writePC(resetAddress);

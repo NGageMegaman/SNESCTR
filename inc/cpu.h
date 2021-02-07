@@ -3,6 +3,7 @@
 #include "mem.h"
 #include "regfile.h"
 #include "decoder.h"
+#include "executionUnit.h"
 using namespace std;
 
 class CPU{
@@ -17,4 +18,5 @@ class CPU{
         Mem *mem;
         Regfile *regfile;
         Decoder *decoder;
+        ExecutionUnit *executionUnit;
 };

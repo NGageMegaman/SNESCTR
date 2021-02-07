@@ -33,6 +33,15 @@ void ArithlogicUnit::ADC(longw operand, longw address) {
     regfile->writeP(PFlags_t::CARRY_FLAG, isCarry);
 }
 
+void ArithlogicUnit::AND(longw operand, longw address) {
+    //AND
+    word result = regfile->readA() & operand;
+    regfile->writeA(result);
+
+    procFlagUnit->zeroFlagA(result);
+    procFlagUnit->negativeFlagA(result);
+}
+
 void ArithlogicUnit::ASL_A(longw operand, longw address) {
     //Arithmetic Shift Left (Accum)
     longw result = regfile->readA() << 1;

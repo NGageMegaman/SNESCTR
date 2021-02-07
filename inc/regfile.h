@@ -19,6 +19,7 @@ class Regfile {
         word readX();
         word readY();
         bool readP(PFlags_t PFlag);
+        byte readPAll();
         word readDP();
         word readSP();
         word readPC();
@@ -31,6 +32,7 @@ class Regfile {
         void writeX(word data);
         void writeY(word data);
         void writeP(PFlags_t PFlag, bool value);
+        void writePAll(byte data);
         void writeDP(word data);
         void writeSP(word data);
         void writePC(word data);

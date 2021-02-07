@@ -11,6 +11,7 @@ class ArithlogicUnit {
     public:
         static ArithlogicUnit *getInstance();
         void ADC(longw operand, longw address);
+        void AND(longw operand, longw address);
         void ASL_A(longw operand, longw address);
         void ASL_mem(longw operand, longw address);
         void CMP(longw operand, longw address);

@@ -62,6 +62,19 @@ bool Regfile::readP(PFlags_t PFlag) {
     }
 }
 
+byte Regfile::readPAll() {
+    byte procStat;
+    procStat =  (P.N) << 7 |
+		(P.V) << 6 |
+		(P.M) << 5 |
+		(P.X) << 4 |
+		(P.D) << 3 |
+		(P.I) << 2 |
+		(P.Z) << 1 |
+		(P.C);
+    return procStat;
+}
+
 word Regfile::readDP() {
     return DP;
 }
@@ -125,6 +138,17 @@ void Regfile::writeP(PFlags_t PFlag, bool value) {
         case INTERRUPT_FLAG:   P.I = value; break;
         default: return;
     }
+}
+
+void Regfile::writePAll(byte data) {
+    P.N = (data >> 7) & 1;
+    P.V = (data >> 6) & 1;
+    P.M = (data >> 5) & 1;
+    P.X = (data >> 4) & 1;
+    P.D = (data >> 3) & 1;
+    P.I = (data >> 2) & 1;
+    P.Z = (data >> 1) & 1;
+    P.C = data & 1;
 }
 
 void Regfile::writeDP(word data) {

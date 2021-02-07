@@ -1,5 +1,5 @@
-#include <stdint.h>
 #include "defines.h"
+#include "regfile.h"
 using namespace std;
 
 class Mem {
@@ -14,4 +14,8 @@ class Mem {
         void writeByte(longw address, byte operand);
         void writeWord(longw address, word operand);
         void writeLong(longw address, longw operand);
+        void pushStack(byte operand);
+        byte pullStack();
+    private:
+        Regfile *regfile;
 };

@@ -1,4 +1,3 @@
-#include <stdint.h>
 #include "defines.h"
 #include "regfile.h"
 #include "mem.h"
