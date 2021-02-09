@@ -7,13 +7,15 @@ CPU::CPU() {
     decoder = Decoder::getInstance();
     executionUnit = ExecutionUnit::getInstance();
     
-    uint16_t resetAddress = mem->readWord(RESET_VECTOR);
+    word resetAddress = mem->readWord(RST_VECTOR);
     regfile->writePC(resetAddress);
 }
 
+CPU *CPU::cpu = nullptr;
+
 CPU *CPU::getInstance() {
     if (cpu == nullptr) {
-        cpu = new CPU;
+        cpu = new CPU();
     }
     return cpu;
 }
@@ -29,6 +31,7 @@ void CPU::executeInstruction() {
 }
 
 inst_t CPU::fetch() {
-    longw fetch_address = regfile->createFetchAddress();
+    longw fetch_address = regfile->createFetchAddress(0);
+    cout << (unsigned) fetch_address << endl;
     return (inst_t) mem->readByte(fetch_address);
 }

@@ -1,9 +1,6 @@
 #include "defines.h"
+#pragma once
 using namespace std;
-
-struct ProcessorStatus {
-    bool C, Z, V, N, D, E, M, X, I;
-};
 
 class Regfile {
     //Singleton
@@ -12,36 +9,41 @@ class Regfile {
         static Regfile *regfile;
     public:
         static Regfile *getInstance();
+        void initPC(word value);
         bool isLargeA();
         bool isLargeIdx();
 
         word readA();
+        word readALarge();
         word readX();
+        word readXLarge();
         word readY();
+        word readYLarge();
         bool readP(PFlags_t PFlag);
-        byte readPAll();
+        byte_t readPAll();
         word readDP();
         word readSP();
         word readPC();
-        byte readPB();
-        byte readDB();
+        byte_t readPB();
+        byte_t readDB();
         longw createFetchAddress(int offset);
         longw createAbsoluteAddress(word baseAddress);
         
         void writeA(word data);
+        void writeALarge(word data);
         void writeX(word data);
         void writeY(word data);
         void writeP(PFlags_t PFlag, bool value);
-        void writePAll(byte data);
+        void writePAll(byte_t data);
         void writeDP(word data);
         void writeSP(word data);
         void writePC(word data);
-        void writePB(byte data);
-        void writeDB(byte data);
+        void writePB(byte_t data);
+        void writeDB(byte_t data);
 
     private:
         void initP();
         word X, Y, A, DP, SP, PC;
-        byte PB, DB;
+        byte_t PB, DB;
         ProcessorStatus P;
 };

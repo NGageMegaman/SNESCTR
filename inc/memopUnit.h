@@ -2,6 +2,7 @@
 #include "regfile.h"
 #include "mem.h"
 #include "procFlagUnit.h"
+#pragma once
 using namespace std;
 
 class MemopUnit {
@@ -41,4 +42,4 @@ class MemopUnit {
         Regfile *regfile;
         Mem *mem;
         ProcFlagUnit *procFlagUnit;
-}
+};

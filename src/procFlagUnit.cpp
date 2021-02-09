@@ -5,11 +5,19 @@ ProcFlagUnit::ProcFlagUnit() {
     regfile = Regfile::getInstance();
 }
 
+ProcFlagUnit *ProcFlagUnit::procFlagUnit = nullptr;
+
 ProcFlagUnit *ProcFlagUnit::getInstance() {
     if (procFlagUnit == nullptr) {
         procFlagUnit = new ProcFlagUnit;
     }
     return procFlagUnit;
+}
+
+void ProcFlagUnit::zeroFlag(longw data) {
+    PFlags_t flag = PFlags_t::ZERO_FLAG;
+    if (data == 0) regfile->writeP(flag, true);
+    else regfile->writeP(flag, false);
 }
 
 void ProcFlagUnit::zeroFlagA(longw data) {
@@ -34,6 +42,18 @@ void ProcFlagUnit::zeroFlagX(longw data) {
         if (data & 0x0000ff == 0) regfile->writeP(flag, true);
         else regfile->writeP(flag, false);
     }
+}
+
+void ProcFlagUnit::negativeFlag(longw data) {
+    PFlags_t flag = PFlags_t::NEGATIVE_FLAG;
+    if ((data >> 7) & 1 == 1) regfile->writeP(flag, true);
+    else regfile->writeP(flag, false);
+}
+
+void ProcFlagUnit::negativeFlagLarge(longw data) {
+    PFlags_t flag = PFlags_t::NEGATIVE_FLAG;
+    if ((data >> 15) & 1 == 1) regfile->writeP(flag, true);
+    else regfile->writeP(flag, false);
 }
 
 void ProcFlagUnit::negativeFlagA(longw data) {
@@ -91,7 +111,7 @@ void ProcFlagUnit::carryFlagCMP(longw reg, longw data, bool large) {
         else regfile->writeP(flag, false);
     }
     else {
-        if (reg >= (byte) data) regfile->writeP(flag, true);
+        if (reg >= (byte_t) data) regfile->writeP(flag, true);
         else regfile->writeP(flag, false);
     }
 }
@@ -99,7 +119,7 @@ void ProcFlagUnit::carryFlagCMP(longw reg, longw data, bool large) {
 void ProcFlagUnit::overflowFlagADC(longw operand, longw result) {
     PFlags_t flag = PFlags_t::OVERFLOW_FLAG;
     bool signResult, signA, signOperand;
-    byte shiftAmount;
+    byte_t shiftAmount;
     if (regfile->isLargeA()) shiftAmount = 15;
     else shiftAmount = 7;
     signResult  = (result           >> shiftAmount) & 1;

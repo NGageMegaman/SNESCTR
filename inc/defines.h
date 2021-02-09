@@ -1,19 +1,39 @@
 #include <stdint.h>
+#include <iostream>
+#include <fstream>
+#include <map>
+#pragma once
 using namespace std;
 
-typedef uint8_t  byte;
+typedef uint8_t  byte_t;
 typedef uint16_t word;
 typedef uint32_t longw;
 typedef int8_t   s_byte;
 typedef int16_t  s_word;
 
-const longw RESET_VECTOR = 0x00fffc;
+const longw COP_VECTOR       = 0x00ffe4;
+const longw BRK_VECTOR       = 0x00ffe6;
+const longw ABT_VECTOR       = 0x00ffe8;
+const longw NMI_VECTOR       = 0x00ffea;
+const longw IRQ_VECTOR       = 0x00ffee;
+const longw COP_VECTOR_E     = 0x00fff4;
+const longw ABT_VECTOR_E     = 0x00fff8;
+const longw NMI_VECTOR_E     = 0x00fffa;
+const longw RST_VECTOR       = 0x00fffc;
+const longw BRK_IRQ_VECTOR_E = 0x00fffe;
+
 const longw SP_INIT_VALUE = 0x00001ff;
+
+const longw HEADER_SIZE = 0x1e;
+
+struct ProcessorStatus {
+    bool C, Z, V, N, D, E, M, X, I, B;
+};
 
 enum PFlags_t { 
     CARRY_FLAG, ZERO_FLAG, OVERFLOW_FLAG, NEGATIVE_FLAG,
     DECIMAL_FLAG, EMULATION_FLAG, ACCUMULATOR_FLAG,
-    ACCUMULATOR_FLAG, INDEX_FLAG, INTERRUPT_FLAG
+    INDEX_FLAG, INTERRUPT_FLAG, BREAKPOINT_FLAG
 };
 
 enum addr_mode_t {

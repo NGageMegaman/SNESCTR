@@ -1,9 +1,9 @@
-#include <stdint.h>
 #include "defines.h"
 #include "mem.h"
 #include "regfile.h"
 #include "decoder.h"
 #include "executionUnit.h"
+#pragma once
 using namespace std;
 
 class CPU{

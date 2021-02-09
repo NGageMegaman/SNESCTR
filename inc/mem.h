@@ -1,5 +1,7 @@
 #include "defines.h"
 #include "regfile.h"
+#include "romMapper.h"
+#pragma once
 using namespace std;
 
 class Mem {
@@ -8,14 +10,17 @@ class Mem {
         static Mem *mem;
     public:
         static Mem *getInstance();
-        byte  readByte(longw address);
+        void initMem();
+        byte_t  readByte(longw address);
         word  readWord(longw address);
         longw readLong(longw address);
-        void writeByte(longw address, byte operand);
+        void writeByte(longw address, byte_t operand);
         void writeWord(longw address, word operand);
         void writeLong(longw address, longw operand);
-        void pushStack(byte operand);
-        byte pullStack();
+        void pushStack(byte_t operand);
+        byte_t pullStack();
     private:
         Regfile *regfile;
+        RomMapper *romMapper;
+        byte_t memory[0xffffff];
 };

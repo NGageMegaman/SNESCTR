@@ -8,6 +8,8 @@ Regfile::Regfile() {
     X = Y = A = PB = DB = DP = 0;
 }
 
+Regfile *Regfile::regfile = nullptr;
+
 Regfile *Regfile::getInstance() {
     if (regfile == nullptr) {
         regfile = new Regfile;
@@ -15,8 +17,12 @@ Regfile *Regfile::getInstance() {
     return regfile;
 }
 
+void Regfile::initPC(word value) {
+    PC = value;
+}
+
 void Regfile::initP() {
-    P.C = P.Z = P.V = P.N = P.D = P.E = 0;
+    P.C = P.Z = P.V = P.N = P.D = P.E = P.B = 0;
     P.M = P.X = P.I = 1;
 }
 
@@ -39,11 +45,25 @@ word Regfile::readA() {
     else return A;
 }
 
+word Regfile::readALarge() {
+    return A;
+}
+
 word Regfile::readX() {
+    if (isLargeIdx()) return X;
+    else return X & 0x00ff;
+}
+
+word Regfile::readXLarge() {
     return X;
 }
 
 word Regfile::readY() {
+    if (isLargeIdx()) return Y;
+    else return Y & 0x00ff;
+}
+
+word Regfile::readYLarge() {
     return Y;
 }
 
@@ -62,8 +82,8 @@ bool Regfile::readP(PFlags_t PFlag) {
     }
 }
 
-byte Regfile::readPAll() {
-    byte procStat;
+byte_t Regfile::readPAll() {
+    byte_t procStat;
     procStat =  (P.N) << 7 |
 		(P.V) << 6 |
 		(P.M) << 5 |
@@ -87,11 +107,11 @@ word Regfile::readPC() {
     return PC;
 }
 
-byte Regfile::readPB() {
+byte_t Regfile::readPB() {
     return PB;
 }
 
-byte Regfile::readDB() {
+byte_t Regfile::readDB() {
     return DB;
 }
 
@@ -113,6 +133,10 @@ longw Regfile::createAbsoluteAddress(word baseAddress) {
 void Regfile::writeA(word data) {
     if (isLargeA()) A = data;
     else A = (A & 0xff00) | (data & 0x00ff);
+}
+
+void Regfile::writeALarge(word data) {
+    A = data;
 }
 
 void Regfile::writeX(word data) {
@@ -140,7 +164,7 @@ void Regfile::writeP(PFlags_t PFlag, bool value) {
     }
 }
 
-void Regfile::writePAll(byte data) {
+void Regfile::writePAll(byte_t data) {
     P.N = (data >> 7) & 1;
     P.V = (data >> 6) & 1;
     P.M = (data >> 5) & 1;
@@ -163,10 +187,10 @@ void Regfile::writePC(word data) {
     PC = data;
 }
 
-void Regfile::writePB(byte data) {
+void Regfile::writePB(byte_t data) {
     PB = data;
 }
 
-void Regfile::writeDB(byte data) {
+void Regfile::writeDB(byte_t data) {
     DB = data;
 }

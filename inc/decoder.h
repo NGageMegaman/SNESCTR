@@ -1,6 +1,7 @@
 #include "defines.h"
 #include "regfile.h"
 #include "mem.h"
+#pragma once
 using namespace std;
 
 class Decoder {

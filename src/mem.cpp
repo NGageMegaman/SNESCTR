@@ -3,7 +3,11 @@ using namespace std;
 
 Mem::Mem() {
     regfile = Regfile::getInstance();
+    romMapper = RomMapper::getInstance();
+    initMem();
 }
+
+Mem *Mem::mem = nullptr;
 
 Mem *Mem::getInstance() {
     if (mem == nullptr) {
@@ -12,27 +16,33 @@ Mem *Mem::getInstance() {
     return mem;
 }
 
-byte Mem::readByte(longw address) {
-    //TBI
-    return 0;
+void Mem::initMem() {
+    byte_t *rom = romMapper->mapRom("smw.sfc");
+    for (int i = 0; i<0xffffff; ++i) {
+        writeByte(i, rom[i]);
+    }    
+    regfile->initPC(readWord(RST_VECTOR));
+}
+
+byte_t Mem::readByte(longw address) {
+    return memory[address];
 }
 
 word Mem::readWord(longw address) {
-    byte lowByte  = readByte(address);
-    byte highByte = readByte(address+1);
+    byte_t lowByte  = readByte(address);
+    byte_t highByte = readByte(address+1);
     return (highByte << 8) | lowByte;
 }
 
 longw Mem::readLong(longw address) {
-    byte lowByte    = readByte(address);
-    byte middleByte = readByte(address+1);
-    byte highByte   = readByte(address+2);
+    byte_t lowByte    = readByte(address);
+    byte_t middleByte = readByte(address+1);
+    byte_t highByte   = readByte(address+2);
     return (highByte << 16) | (middleByte << 8) | lowByte;
 }
 
-void Mem::writeByte(longw address, byte operand) {
-    //TBI
-    return;
+void Mem::writeByte(longw address, byte_t operand) {
+    memory[address] = operand;
 }
 
 void Mem::writeWord(longw address, word operand) {
@@ -46,14 +56,15 @@ void Mem::writeLong(longw address, longw operand) {
     writeByte(address+2, operand >> 16);
 }
 
-void Mem::pushStack(byte operand) {
+void Mem::pushStack(byte_t operand) {
     word SP = regfile->readSP();
     writeByte(SP, operand);
     regfile->writeSP(SP-1);
 }
 
-byte Mem::pullStack() {
+byte_t Mem::pullStack() {
     word SP = regfile->readSP();
-    byte result = readByte(SP);
+    byte_t result = readByte(SP);
     regfile->writeSP(SP+1);
+    return result;
 }

@@ -1,4 +1,7 @@
+#ifndef DEFINES_H
 #include "defines.h"
+#define DEFINES_H
+#endif
 #include "procFlagUnit.h"
 #include "mem.h"
 #include "regfile.h"

@@ -6,6 +6,8 @@ BranchUnit::BranchUnit() {
     mem = Mem::getInstance();
 }
 
+BranchUnit *BranchUnit::branchUnit = nullptr;
+
 BranchUnit *BranchUnit::getInstance() {
     if (branchUnit == nullptr) {
         branchUnit = new BranchUnit();
@@ -93,7 +95,7 @@ void BranchUnit::JML(longw operand, longw address) {
 
 void BranchUnit::JSR(longw operand, longw address) {
     //Jump to Subroutine
-    word returnAddress = regfile->readPC() - 1; //Last byte of the instruction
+    word returnAddress = regfile->readPC() - 1; //Last byte_t of the instruction
     mem->pushStack(returnAddress >> 8); //high
     mem->pushStack(returnAddress); //low
     regfile->writePC(address);
@@ -101,7 +103,7 @@ void BranchUnit::JSR(longw operand, longw address) {
 
 void BranchUnit::JSL(longw operand, longw address) {
     //Jump to Subroutine Long
-    word returnAddress = regfile->readPC() - 1; //Last byte of the instruction
+    word returnAddress = regfile->readPC() - 1; //Last byte_t of the instruction
     mem->pushStack(regfile->readPB());
     mem->pushStack(returnAddress >> 8); //high
     mem->pushStack(returnAddress); //low
@@ -112,10 +114,10 @@ void BranchUnit::JSL(longw operand, longw address) {
 
 void BranchUnit::RTI(longw operand, longw address) {
     //Return from Interrupt
-    byte procStat = mem->pullStack();
+    byte_t procStat = mem->pullStack();
     regfile->writePAll(procStat);
-    byte PC_l = mem->pullStack();
-    byte PC_h = mem->pullStack();
+    byte_t PC_l = mem->pullStack();
+    byte_t PC_h = mem->pullStack();
     regfile->writePC((PC_h << 8) | PC_l);
 
     if (regfile->readP(PFlags_t::EMULATION_FLAG)) {
@@ -127,15 +129,15 @@ void BranchUnit::RTI(longw operand, longw address) {
 
 void BranchUnit::RTS(longw operand, longw address) {
     //Return from subroutine
-    byte PC_l = mem->pullStack();
-    byte PC_h = mem->pullStack();
-    regfile->writePC(((PC_h << 8) | PC_l) + 1); //Last byte of instr + 1
+    byte_t PC_l = mem->pullStack();
+    byte_t PC_h = mem->pullStack();
+    regfile->writePC(((PC_h << 8) | PC_l) + 1); //Last byte_t of instr + 1
 }
 
 void BranchUnit::RTL(longw operand, longw address) {
     //Return from subroutine Long
-    byte PC_l = mem->pullStack();
-    byte PC_h = mem->pullStack();
-    regfile->writePC(((PC_h << 8) | PC_l) + 1); //Last byte of instr + 1
+    byte_t PC_l = mem->pullStack();
+    byte_t PC_h = mem->pullStack();
+    regfile->writePC(((PC_h << 8) | PC_l) + 1); //Last byte_t of instr + 1
     regfile->writePB(mem->pullStack());
 }

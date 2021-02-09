@@ -7,6 +7,8 @@ ArithlogicUnit::ArithlogicUnit() {
     mem = Mem::getInstance();
 }
 
+ArithlogicUnit *ArithlogicUnit::arithlogicUnit = nullptr;
+
 ArithlogicUnit *ArithlogicUnit::getInstance() {
     if (arithlogicUnit == nullptr) {
         arithlogicUnit = new ArithlogicUnit();
@@ -63,13 +65,13 @@ void ArithlogicUnit::ASL_mem(longw operand, longw address) {
     procFlagUnit->negativeFlagA(result);
 }
 
-void ArithlogicUnit::CPX(longw operand, longw address) {
+void ArithlogicUnit::CMP(longw operand, longw address) {
     //Compare A register
     word comp = regfile->readA() - operand;
 
-    procFlagUnit->zeroFlagX(comp);
+    procFlagUnit->zeroFlagA(comp);
     procFlagUnit->carryFlagCMP(regfile->readA(), operand, regfile->isLargeA());
-    procFlagUnit->negativeFlagX(comp);
+    procFlagUnit->negativeFlagA(comp);
 }
 
 void ArithlogicUnit::CPX(longw operand, longw address) {
