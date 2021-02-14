@@ -4,6 +4,10 @@ using namespace std;
 Mem::Mem() {
     regfile = Regfile::getInstance();
     romMapper = RomMapper::getInstance();
+    ppuParams = PpuParams::getInstance();
+    windowParams = WindowParams::getInstance();
+    backgroundParams = BackgroundParams::getInstance();
+    characterParams = CharacterParams::getInstance();
     initMem();
 }
 
@@ -63,8 +67,8 @@ void Mem::pushStack(byte_t operand) {
 }
 
 byte_t Mem::pullStack() {
-    word SP = regfile->readSP();
+    word SP = regfile->readSP() + 1;
+    regfile->writeSP(SP);
     byte_t result = readByte(SP);
-    regfile->writeSP(SP+1);
     return result;
 }

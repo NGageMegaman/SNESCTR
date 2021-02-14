@@ -1,6 +1,10 @@
 #include "defines.h"
 #include "regfile.h"
 #include "romMapper.h"
+#include "ppuParams.h"
+#include "windowParams.h"
+#include "backgroundParams.h"
+#include "characterParams.h"
 #pragma once
 using namespace std;
 
@@ -22,5 +26,9 @@ class Mem {
     private:
         Regfile *regfile;
         RomMapper *romMapper;
+        PpuParams *ppuParams;
+        WindowParams *windowParams;
+        BackgroundParams *backgroundParams;
+        CharacterParams *characterParams;
         byte_t memory[0xffffff];
 };
