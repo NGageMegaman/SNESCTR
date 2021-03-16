@@ -2,7 +2,6 @@
 using namespace std;
 
 CharacterParams::CharacterParams() {
-
 }
 
 CharacterParams *CharacterParams::characterParams = nullptr;
@@ -30,7 +29,7 @@ word CharacterParams::getNameTableAddress(bool selectNametable) {
     return address & 0x7fff;
 }
 
-pair<byte_t, byte_t> CharacterParams::getCharacterSize(bool large) {
+pair<byte_t, byte_t> CharacterParams::getObjectCharacterSize(bool large) {
     byte_t x, y;
     switch (objectSize) {
         case 0:

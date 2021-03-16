@@ -1,4 +1,5 @@
 #include "defines.h"
+#pragma once
 using namespace std;
 
 class CharacterParams {
@@ -10,7 +11,7 @@ class CharacterParams {
         void writeOBSEL(byte_t data);
 
         word getNameTableAddress(bool selectNametable);
-        pair<byte_t, byte_t> getCharacterSize(bool large);
+        pair<byte_t, byte_t> getObjectCharacterSize(bool large);
     private:
         word nameBaseSelect;
         byte_t nameSelect, objectSize;

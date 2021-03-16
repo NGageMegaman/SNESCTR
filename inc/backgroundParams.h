@@ -34,6 +34,7 @@ class BackgroundParams {
         bool isM1BG3priority();
         pair<byte_t, byte_t> getCharSize(byte_t background);
         byte_t getMosaic(byte_t background);
+        longw getTilemapAddress(byte_t background);
         bool getTilemapHMirror(byte_t background);
         bool getTilemapVMirror(byte_t background);
         longw getBaseAddress(byte_t background);
@@ -52,8 +53,11 @@ class BackgroundParams {
         byte_t getColorIntensityR();
         byte_t getColorIntensityG();
         byte_t getColorIntensityB();
-        
+        byte_t getBpp(byte_t background);
+        longw getPaletteAddress(byte_t background);
     private:
+        void initBppMatrix();
+
         byte_t BGMode;
         bool M1BG3priority;
         bool BG1charSize, BG2charSize, BG3charSize, BG4charSize;
@@ -93,4 +97,5 @@ class BackgroundParams {
         bool halfColorMath, addSubColors;
         byte_t colorIntensity;
         bool colorIntensityR, colorIntensityG, colorIntensityB;
+        byte_t bppMatrix[32];
 };

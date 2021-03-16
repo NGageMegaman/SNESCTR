@@ -95,7 +95,7 @@ void BranchUnit::JML(longw operand, longw address) {
 
 void BranchUnit::JSR(longw operand, longw address) {
     //Jump to Subroutine
-    word returnAddress = regfile->readPC() - 1; //Last byte_t of the instruction
+    word returnAddress = regfile->readPC() - 1; //Last byte of the instruction
     mem->pushStack(returnAddress >> 8); //high
     mem->pushStack(returnAddress); //low
     regfile->writePC(address);
@@ -103,7 +103,7 @@ void BranchUnit::JSR(longw operand, longw address) {
 
 void BranchUnit::JSL(longw operand, longw address) {
     //Jump to Subroutine Long
-    word returnAddress = regfile->readPC() - 1; //Last byte_t of the instruction
+    word returnAddress = regfile->readPC() - 1; //Last byte of the instruction
     mem->pushStack(regfile->readPB());
     mem->pushStack(returnAddress >> 8); //high
     mem->pushStack(returnAddress); //low
@@ -131,7 +131,7 @@ void BranchUnit::RTS(longw operand, longw address) {
     //Return from subroutine
     byte_t PC_l = mem->pullStack();
     byte_t PC_h = mem->pullStack();
-    regfile->writePC(((PC_h << 8) | PC_l) + 1); //Last byte_t of instr + 1
+    regfile->writePC(((PC_h << 8) | PC_l) + 1); //Last byte of instr + 1
 }
 
 void BranchUnit::RTL(longw operand, longw address) {

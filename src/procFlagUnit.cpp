@@ -23,11 +23,11 @@ void ProcFlagUnit::zeroFlag(longw data) {
 void ProcFlagUnit::zeroFlagA(longw data) {
     PFlags_t flag = PFlags_t::ZERO_FLAG;
     if (regfile->isLargeA()) {
-        if (data & 0x00ffff == 0) regfile->writeP(flag, true);
+        if ((word) data == 0) regfile->writeP(flag, true);
         else regfile->writeP(flag, false);
     }
     else {
-        if (data & 0x0000ff == 0) regfile->writeP(flag, true);
+        if ((byte_t) data == 0) regfile->writeP(flag, true);
         else regfile->writeP(flag, false);
     }
 }
@@ -35,11 +35,11 @@ void ProcFlagUnit::zeroFlagA(longw data) {
 void ProcFlagUnit::zeroFlagX(longw data) {
     PFlags_t flag = PFlags_t::ZERO_FLAG;
     if (regfile->isLargeIdx()) {
-        if (data & 0x00ffff == 0) regfile->writeP(flag, true);
+        if ((word) data == 0) regfile->writeP(flag, true);
         else regfile->writeP(flag, false);
     }
     else {
-        if (data & 0x0000ff == 0) regfile->writeP(flag, true);
+        if ((byte_t) data == 0) regfile->writeP(flag, true);
         else regfile->writeP(flag, false);
     }
 }

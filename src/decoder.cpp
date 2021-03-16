@@ -10,7 +10,7 @@ Decoder *Decoder::decoder = nullptr;
 
 Decoder *Decoder::getInstance() {
     if (decoder == nullptr) {
-        decoder = new Decoder;
+        decoder = new Decoder();
     }
     return decoder;
 }
@@ -58,7 +58,7 @@ void Decoder::decode(inst_t inst, longw *operand, longw *address) {
 }
 
 void Decoder::decodeColumn00(inst_t inst, longw *operand, longw *address) {
-    if (inst == JSR1) decodeOperandAbsolute(operand, address);
+    if (inst == JSR1) decodeOperandImmediateWord(operand, address);
     else if (inst == BRA) decodeOperandRelative(operand, address);
     else if (inst == BRK) decodeOperandImmediate(operand, address);
     else if (inst != RTI && inst != RTS) {
@@ -139,7 +139,7 @@ void Decoder::decodeOperandImmediate(longw *operand, longw *address) {
     longw operandAddress = regfile->createFetchAddress(1);
     byte_t op = mem->readByte(operandAddress);
 
-    *address = 0;
+    *address = op;
     *operand = op;
     implicitIncrement(2);
 }
@@ -149,7 +149,7 @@ void Decoder::decodeOperandImmediateWord(longw *operand, longw *address) {
     longw operandAddress = regfile->createFetchAddress(1);
     word op = mem->readWord(operandAddress);
 
-    *address = 0;
+    *address = op;
     *operand = op;
     implicitIncrement(3);
 }
@@ -159,7 +159,7 @@ void Decoder::decodeOperandImmediateLong(longw *operand, longw *address) {
     longw operandAddress = regfile->createFetchAddress(1);
     longw op = mem->readLong(operandAddress);
 
-    *address = 0;
+    *address = op;
     *operand = op;
     implicitIncrement(4);
 }
@@ -242,7 +242,7 @@ void Decoder::decodeOperandAbsoluteIndirect(longw *operand, longw *address) {
 void Decoder::decodeOperandAbsoluteIndirectLong(longw *operand, longw *address) {
     //address = ram[00:word], operand = mem[address]
     longw operandAddress = regfile->createFetchAddress(1);
-    word indirectAddress = mem->readWord(operandAddress);
+    longw indirectAddress = (regfile->readPB() << 16) + mem->readWord(operandAddress); //POSSIBLE BUG, DOES JML RECEIVE INDIRECT OR ABSOLUTE ADDRESS?
     longw absoluteAddress = mem->readLong(indirectAddress);
     word op = mem->readWord(absoluteAddress);
 
@@ -254,8 +254,8 @@ void Decoder::decodeOperandAbsoluteIndirectLong(longw *operand, longw *address) 
 void Decoder::decodeOperandAbsoluteIndexedIndirect(longw *operand, longw *address) {
     //address = mem[00:word + x], operand = mem[address]
     longw operandAddress = regfile->createFetchAddress(1);
-    word indirectAddress = mem->readWord(operandAddress) + regfile->readX();
-    longw absoluteAddress = mem->readWord(indirectAddress);
+    longw indirectAddress = (regfile->readPB() << 16) + mem->readWord(operandAddress) + regfile->readX();
+    word absoluteAddress = mem->readWord(indirectAddress);
     word op = mem->readWord(absoluteAddress);
 
     *address = absoluteAddress;
@@ -291,7 +291,7 @@ void Decoder::decodeOperandDirectIndirectLong(longw *operand, longw *address) {
     //address_long = mem[byte_t+DP], operand = mem[address_long]    
     longw operandAddress = regfile->createFetchAddress(1);
     word indirectAddress = mem->readByte(operandAddress) + regfile->readDP();
-    word directAddress = mem->readLong(indirectAddress);
+    longw directAddress = mem->readLong(indirectAddress);
     word op = mem->readWord(directAddress);
 
     *address = directAddress;
@@ -351,7 +351,7 @@ void Decoder::decodeOperandDirectIndirectLongIndexed(longw *operand, longw *addr
     //address = mem[DP+byte_t]+y, operand = mem[address]
     longw operandAddress = regfile->createFetchAddress(1);
     word indirectAddress = mem->readByte(operandAddress) + regfile->readDP();
-    word directAddress = mem->readLong(indirectAddress) + regfile->readY();
+    longw directAddress = mem->readLong(indirectAddress) + regfile->readY();
     word op = mem->readWord(directAddress);
 
     *address = directAddress;
@@ -398,7 +398,7 @@ void Decoder::decodeOperandStackRelativeIndirectIndexed(longw *operand, longw *a
     longw operandAddress = regfile->createFetchAddress(1);
     byte_t increment = mem->readByte(operandAddress);
     word relativeAddress = regfile->readSP() + increment;
-    word indexedAddress = mem->readWord(relativeAddress) + regfile->readY();
+    longw indexedAddress = (regfile->readDB() << 16) + mem->readWord(relativeAddress) + regfile->readY();
     word op = mem->readWord(indexedAddress);
 
     *address = indexedAddress;

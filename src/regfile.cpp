@@ -41,8 +41,8 @@ bool Regfile::isLargeIdx() {
 ////////////////////
 
 word Regfile::readA() {
-    if (isLargeA()) return (A & 0x00ff);
-    else return A;
+    if (isLargeA()) return A;
+    else return A & 0x00ff;
 }
 
 word Regfile::readALarge() {
@@ -84,14 +84,15 @@ bool Regfile::readP(PFlags_t PFlag) {
 
 byte_t Regfile::readPAll() {
     byte_t procStat;
-    procStat =  (P.N) << 7 |
-		(P.V) << 6 |
-		(P.M) << 5 |
-		(P.X) << 4 |
-		(P.D) << 3 |
-		(P.I) << 2 |
-		(P.Z) << 1 |
-		(P.C);
+    procStat =  
+                ((P.N) << 7) |
+	            ((P.V) << 6) |
+	            ((P.M) << 5) |
+	            ((P.X) << 4) |
+	            ((P.D) << 3) |
+	            ((P.I) << 2) |
+	            ((P.Z) << 1) |
+	            (P.C);
     return procStat;
 }
 

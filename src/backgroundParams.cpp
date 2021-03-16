@@ -41,6 +41,7 @@ BackgroundParams::BackgroundParams() {
     halfColorMath = addSubColors = 0;
     colorIntensity = 0;
     colorIntensityR = colorIntensityG = colorIntensityB = 0;
+    initBppMatrix();
 }
 
 BackgroundParams *BackgroundParams::backgroundParams = nullptr;
@@ -72,25 +73,25 @@ void BackgroundParams::writeMOSAIC(byte_t data) {
 void BackgroundParams::writeBG1SC(byte_t data) {
     BG1TilemapHMirror = data & 1;
     BG1TilemapVMirror = (data >> 1) & 1;
-    BG1TilemapAddress = ((data >> 2) & 0x3f) << 10;
+    BG1TilemapAddress = (data >> 2) & 0x3f;
 }
 
 void BackgroundParams::writeBG2SC(byte_t data) {
     BG2TilemapHMirror = data & 1;
     BG2TilemapVMirror = (data >> 1) & 1;
-    BG2TilemapAddress = ((data >> 2) & 0x3f) << 10;
+    BG2TilemapAddress = (data >> 2) & 0x3f;
 }
 
 void BackgroundParams::writeBG3SC(byte_t data) {
     BG3TilemapHMirror = data & 1;
     BG3TilemapVMirror = (data >> 1) & 1;
-    BG3TilemapAddress = ((data >> 2) & 0x3f) << 10;
+    BG3TilemapAddress = (data >> 2) & 0x3f;
 }
 
 void BackgroundParams::writeBG4SC(byte_t data) {
     BG4TilemapHMirror = data & 1;
     BG4TilemapVMirror = (data >> 1) & 1;
-    BG4TilemapAddress = ((data >> 2) & 0x3f) << 10;
+    BG4TilemapAddress = (data >> 2) & 0x3f;
 }
 
 void BackgroundParams::writeBG12NBA(byte_t data) {
@@ -244,10 +245,10 @@ bool BackgroundParams::isM1BG3priority() {
 pair<byte_t, byte_t> BackgroundParams::getCharSize(byte_t background) {
     byte_t x, y;
     switch (background) {
-        case 1: x = BG1charSize ? 8 : 16; break;
-        case 2: x = BG2charSize ? 8 : 16; break;
-        case 3: x = BG3charSize ? 8 : 16; break;
-        default: x = BG4charSize ? 8 : 16;
+        case 1: x = BG1charSize ? 16 : 8; break;
+        case 2: x = BG2charSize ? 16 : 8; break;
+        case 3: x = BG3charSize ? 16 : 8; break;
+        default: x = BG4charSize ? 16 : 8;
     }
     y = x;
     return make_pair(x, y);
@@ -261,6 +262,19 @@ byte_t BackgroundParams::getMosaic(byte_t background) {
         case 3: size = BG3Mosaic ? mosaicSize : 1; break;
         default: size = BG4Mosaic ? mosaicSize : 1;
     }
+    return size;
+}
+
+longw BackgroundParams::getTilemapAddress(byte_t background) {
+    longw tilemapAddress;
+    switch(background) {
+        case 1: tilemapAddress = BG1TilemapAddress; break;
+        case 2: tilemapAddress = BG2TilemapAddress; break;
+        case 3: tilemapAddress = BG3TilemapAddress; break;
+        default: tilemapAddress = BG4TilemapAddress;
+    }
+    tilemapAddress <<= 10;
+    return tilemapAddress;
 }
 
 bool BackgroundParams::getTilemapHMirror(byte_t background) {
@@ -271,6 +285,7 @@ bool BackgroundParams::getTilemapHMirror(byte_t background) {
         case 3: mirror = BG3TilemapHMirror; break;
         default: mirror = BG4TilemapHMirror;
     }
+    return mirror;
 }
 
 bool BackgroundParams::getTilemapVMirror(byte_t background) {
@@ -281,6 +296,7 @@ bool BackgroundParams::getTilemapVMirror(byte_t background) {
         case 3: mirror = BG3TilemapVMirror; break;
         default: mirror = BG4TilemapVMirror;
     }
+    return mirror;
 }
 
 longw BackgroundParams::getBaseAddress(byte_t background) {
@@ -291,6 +307,7 @@ longw BackgroundParams::getBaseAddress(byte_t background) {
         case 3: baseAddress = BG3BaseAddress; break;
         default: baseAddress = BG4BaseAddress;
     }
+    baseAddress <<= 12;
     return baseAddress;
 }
 
@@ -366,6 +383,7 @@ bool BackgroundParams::getColorMathEnable(byte_t background) {
         case 5: colorMathEnable = OBJColorMathEnable; break;
         default: colorMathEnable = BDPColorMathEnable;
     }
+    return colorMathEnable;
 }
 
 bool BackgroundParams::getHalfColorMath() {
@@ -390,4 +408,45 @@ byte_t BackgroundParams::getColorIntensityG() {
 
 byte_t BackgroundParams::getColorIntensityB() {
     return colorIntensityB;
+}
+
+byte_t BackgroundParams::getBpp(byte_t background) {
+    return bppMatrix[4*BGMode + (background-1)];
+}
+
+longw BackgroundParams::getPaletteAddress(byte_t background) {
+    if (BGMode == 0) return 4*4*(background-1);
+    else return 0;
+}
+
+void BackgroundParams::initBppMatrix() {
+    bppMatrix[0] = 2;
+    bppMatrix[1] = 2;
+    bppMatrix[2] = 2;
+    bppMatrix[3] = 2;
+    bppMatrix[4] = 4;
+    bppMatrix[5] = 4;
+    bppMatrix[6] = 2;
+    bppMatrix[7] = 0;
+    bppMatrix[8] = 4;
+    bppMatrix[9] = 4;
+    bppMatrix[10] = 0;
+    bppMatrix[11] = 0;
+    bppMatrix[12] = 8;
+    bppMatrix[13] = 4;
+    bppMatrix[14] = 0;
+    bppMatrix[15] = 0;
+    bppMatrix[16] = 8;
+    bppMatrix[17] = 2;
+    bppMatrix[18] = 0;
+    bppMatrix[19] = 0;
+    bppMatrix[20] = 4;
+    bppMatrix[21] = 2;
+    bppMatrix[22] = 0;
+    bppMatrix[23] = 0;
+    bppMatrix[24] = 4;
+    bppMatrix[25] = 0;
+    bppMatrix[26] = 0;
+    bppMatrix[27] = 0;
+    bppMatrix[28] = 8;
 }

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <map>
+#include <vector>
 #pragma once
 using namespace std;
 
@@ -22,9 +23,19 @@ const longw NMI_VECTOR_E     = 0x00fffa;
 const longw RST_VECTOR       = 0x00fffc;
 const longw BRK_IRQ_VECTOR_E = 0x00fffe;
 
+const longw WRAM_SIZE     = 0x01ffff;
+const longw OAM_SIZE      = 512 + 32;
+const longw VRAM_SIZE     = 65536;
+const longw CGRAM_SIZE    = 256;
+const longw SCANLINE_SIZE = 256;
+
 const longw SP_INIT_VALUE = 0x00001ff;
 
 const longw HEADER_SIZE = 0x1e;
+
+const byte_t OAM_NUM_SPRITES = 128;
+
+const word  TRANSPARENT = 0xffff;
 
 struct ProcessorStatus {
     bool C, Z, V, N, D, E, M, X, I, B;

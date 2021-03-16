@@ -39,6 +39,9 @@ void ProcStatUnit::BRK(longw operand, longw address) {
     byte_t PC_h = regfile->readPC() >> 8;
     byte_t procStat = regfile->readPAll();
 
+    if (!regfile->readP(PFlags_t::EMULATION_FLAG)) {
+        mem->pushStack(regfile->readPB());
+    }
     mem->pushStack(PC_h);
     mem->pushStack(PC_l);
     mem->pushStack(procStat);
@@ -160,7 +163,7 @@ void ProcStatUnit::TCS(longw operand, longw address) {
     //Transfer A to SP
     regfile->writeSP(regfile->readALarge());
     if (regfile->readP(PFlags_t::EMULATION_FLAG)) {
-        //If emulation mode, high byte_t = 01, only 8 bits transfer
+        //If emulation mode, high byte = 01, only 8 bits transfer
         regfile->writeSP(0x0100 | (regfile->readSP() & 0x00ff));
     }
 }
@@ -199,7 +202,7 @@ void ProcStatUnit::TXS(longw operand, longw address) {
     //Transfer X to SP
     regfile->writeSP(regfile->readXLarge());
     if (regfile->readP(PFlags_t::EMULATION_FLAG)) {
-        //If emulation mode, high byte_t = 01, only 8 bits transfer
+        //If emulation mode, high byte = 01, only 8 bits transfer
         regfile->writeSP(0x0100 | (regfile->readSP() & 0x00ff));
     }
 }
@@ -239,7 +242,7 @@ void ProcStatUnit::WDM(longw operand, longw address) {
 void ProcStatUnit::XBA(longw operand, longw address) {
     //Exchange the B and A accumulators
     word BA = regfile->readALarge();
-    word AB = (BA << 8) | ((BA >> 8) & 0x00ff);
+    word AB = ((BA << 8) & 0xff00) | (BA >> 8);
     regfile->writeALarge(AB);
     procFlagUnit->zeroFlag(AB & 0x00ff);
     procFlagUnit->negativeFlag(AB & 0x00ff);
@@ -250,12 +253,35 @@ void ProcStatUnit::XCE(longw operand, longw address) {
 
     bool newC = regfile->readP(PFlags_t::EMULATION_FLAG);
     bool newE = regfile->readP(PFlags_t::CARRY_FLAG);
-    regfile->writeP(PFlags_t::CARRY_FLAG, newE);
-    regfile->writeP(PFlags_t::EMULATION_FLAG, newC);
+    regfile->writeP(PFlags_t::CARRY_FLAG, newC);
+    regfile->writeP(PFlags_t::EMULATION_FLAG, newE);
     if (!newE) {
         regfile->writeP(PFlags_t::ACCUMULATOR_FLAG, true);
         regfile->writeP(PFlags_t::INDEX_FLAG, true);
     }
+}
+
+void ProcStatUnit::NMI() {
+    //Non-Maskable interrupt
+    byte_t PC_l = regfile->readPC();
+    byte_t PC_h = regfile->readPC() >> 8;
+    byte_t procStat = regfile->readPAll();
+    //cout << "NMI: PCprev = " << std::hex << (int) PC_h << std::hex << (int) PC_l << endl;
+    //cout << "GAMEMODE = " << std::hex << (int) mem->readByte(0x7e0100) << endl;
+
+    if (!regfile->readP(PFlags_t::EMULATION_FLAG)) {
+        mem->pushStack(regfile->readPB());
+    }
+    mem->pushStack(PC_h);
+    mem->pushStack(PC_l);
+    mem->pushStack(procStat);
+    if (!regfile->readP(PFlags_t::EMULATION_FLAG)) {
+        regfile->writePC(mem->readWord(NMI_VECTOR));
+    }
+    else {
+        regfile->writePC(mem->readWord(NMI_VECTOR_E));
+    }
+
 }
 
 void ProcStatUnit::NOP(longw operand, longw address) {

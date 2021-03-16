@@ -229,15 +229,15 @@ void MemopUnit::TRB(longw operand, longw address) {
     //Test and Reset memory Bits against A
     word nA = ~regfile->readA();
     word result = operand & nA;
-    if (regfile->isLargeA()) mem->writeByte(address, result);
-    else mem->writeWord(address, result);
+    if (regfile->isLargeA()) mem->writeWord(address, result);
+    else mem->writeByte(address, result);
     procFlagUnit->zeroFlagA(operand & regfile->readA());
 }
 
 void MemopUnit::TSB(longw operand, longw address) {
     //Test and Set memory Bits against A
     word result = operand & regfile->readA();
-    if (regfile->isLargeA()) mem->writeByte(address, result);
-    else mem->writeWord(address, result);
+    if (regfile->isLargeA()) mem->writeWord(address, result);
+    else mem->writeByte(address, result);
     procFlagUnit->zeroFlagA(operand & regfile->readA());
 }

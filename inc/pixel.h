@@ -1,17 +1,16 @@
 #include "defines.h"
+#pragma once
 using namespace std;
 
 class Pixel {
     public:
         Pixel();
         void setColor(word value);
-        void setX(longw value);
-        void setY(longw value);
+        void setPriority(byte_t value);
         word getBGRColor();
         longw getRGBColor();
-        longw getX();
-        longw getY();
+        byte_t getPriority();
     private:
         word BGRColor;
-        longw X, Y;
+        byte_t priority;
 };

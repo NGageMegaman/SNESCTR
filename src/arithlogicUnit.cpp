@@ -32,6 +32,7 @@ void ArithlogicUnit::ADC(longw operand, longw address) {
     procFlagUnit->zeroFlagA(result);
     procFlagUnit->overflowFlagADC(operand, result);
     procFlagUnit->negativeFlagA(result);
+    regfile->writeA(result);
     regfile->writeP(PFlags_t::CARRY_FLAG, isCarry);
 }
 
@@ -178,24 +179,24 @@ void ArithlogicUnit::INY(longw operand, longw address) {
 void ArithlogicUnit::LSR_A(longw operand, longw address) {
     //Logical shift right A
     word result;
-    if (regfile->isLargeA()) result = (operand >> 1) & 0x007f;
-    else result = (operand >> 1) & 0x7fff;
-    regfile->writeA(result);
+    if (regfile->isLargeA()) result = (regfile->readA() >> 1) & 0x7fff;
+    else result = (regfile->readA() >> 1) & 0x007f;
 
     procFlagUnit->zeroFlagA(result);
     procFlagUnit->negativeFlagA(result);
-    regfile->writeP(PFlags_t::CARRY_FLAG, operand & 1);
+    regfile->writeP(PFlags_t::CARRY_FLAG, regfile->readA() & 1);
+    regfile->writeA(result);
 }
 
 void ArithlogicUnit::LSR_mem(longw operand, longw address) {
     //Logical shift right memory
     word result;
     if (regfile->isLargeA()) {
-        result = (operand >> 1) & 0x007f;
+        result = (operand >> 1) & 0x7fff;
         mem->writeWord(address, operand);
     }
     else {
-        result = (operand >> 1) & 0x7fff;
+        result = (operand >> 1) & 0x007f;
         mem->writeByte(address, operand);
     }
 

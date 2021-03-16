@@ -13,6 +13,7 @@ class CPU{
     public:
         static CPU *getInstance();
         void executeInstruction();
+        void NMI();
     private:
         inst_t fetch();
         Mem *mem;

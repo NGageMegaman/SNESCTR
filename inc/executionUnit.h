@@ -13,6 +13,7 @@ class ExecutionUnit {
     public:
         static ExecutionUnit *getInstance();
         void execute(inst_t inst, longw operand, longw address);
+        void NMI();
     private:
         Regfile *regfile;
         ArithlogicUnit *arithlogicUnit;

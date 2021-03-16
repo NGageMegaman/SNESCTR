@@ -340,3 +340,7 @@ void ExecutionUnit::execute(inst_t inst, longw operand, longw address) {
             procStatUnit->NOP(operand, address);
     }
 }
+
+void ExecutionUnit::NMI() {
+    procStatUnit->NMI();
+}

@@ -42,6 +42,7 @@ class ProcStatUnit {
         void XBA(longw operand, longw address);
         void XCE(longw operand, longw address);
         void NOP(longw operand, longw address);
+        void NMI();
     private:
         Regfile *regfile;
         Mem *mem;

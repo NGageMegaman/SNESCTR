@@ -64,17 +64,17 @@ byte_t *RomMapper::loadHeader(char *romName) {
 
 byte_t *RomMapper::loadLoRom(char *romName, unsigned int romSize) {
     // For each bank, we map 0x8000 bytes from rom to upper half of bank
-    // $00:8000 ~ $00:ffff <- rom[$00:0000] ~ rom[$00:7fff]
-    // $01:8000 ~ $01:ffff <- rom[$00:8000] ~ rom[$00:ffff]
-    // $02:8000 ~ $02:ffff <- rom[$01:0000] ~ rom[$01:7fff]
-    // $03:8000 ~ $03:ffff <- rom[$01:8000] ~ rom[$01:ffff]
+    // $80:8000 ~ $80:ffff <- rom[$00:0000] ~ rom[$00:7fff]
+    // $81:8000 ~ $81:ffff <- rom[$00:8000] ~ rom[$00:ffff]
+    // $82:8000 ~ $82:ffff <- rom[$01:0000] ~ rom[$01:7fff]
+    // $83:8000 ~ $83:ffff <- rom[$01:8000] ~ rom[$01:ffff]
     // ...
     static char romMapped[0x1000000];
     ifstream rom;
     rom.open(romName, std::ios_base::binary);
     rom.seekg(0, ios::beg);
     for (int i = 0; romSize != 0; ++i) {
-        rom.read(romMapped + 0x8000 + (0x10000 * i), 0x8000);
+        rom.read(romMapped + 0x800000 + 0x8000 + (0x10000 * i), 0x8000);
         romSize -= 0x8000;
     }
     rom.close();
