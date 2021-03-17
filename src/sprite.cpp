@@ -44,6 +44,7 @@ void Sprite::setFlip(bool hFlip_p, bool vFlip_p) {
 }
 
 void Sprite::setSize(bool size_p) {
+    size = size_p;
     sizeX = characterParams->getObjectCharacterSize(size_p).first;
     sizeY = characterParams->getObjectCharacterSize(size_p).second;
 }
@@ -78,6 +79,10 @@ bool Sprite::getHFlip() {
 
 bool Sprite::getVFlip() {
     return vFlip;
+}
+
+bool Sprite::getSize() {
+    return size;
 }
 
 byte_t Sprite::getSizeX() {

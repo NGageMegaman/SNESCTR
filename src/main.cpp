@@ -8,12 +8,15 @@ PPU *ppu;
 const char g_szClassName[] = "SNES CTR";
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+void vBlank();
 
-extern "C" {
+HWND hwnd;
+//extern "C" {
     int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
         WNDCLASSEX wc;
-        HWND hwnd;
+        //HWND hwnd;
         MSG Msg = {0};
+        bool bDone = false;
 
         wc.cbSize = sizeof(WNDCLASSEX);
         wc.style = 0;
@@ -46,19 +49,25 @@ extern "C" {
             return 0;
         }
 
-        ShowWindow(hwnd, nCmdShow);
+        ShowWindow(hwnd, SW_SHOW);
         UpdateWindow(hwnd);
-
-        while (GetMessage(&Msg, NULL, 0, 0) > 0) {
-            TranslateMessage(&Msg);
-            if (Msg.message != 96) DispatchMessage(&Msg);
+        DisableProcessWindowsGhosting();
+        while (!bDone) {
+            if (PeekMessage(&Msg, hwnd, 0, 0, PM_REMOVE)) {
+                TranslateMessage(&Msg);
+                DispatchMessage(&Msg);
+                if (Msg.message == WM_QUIT) bDone = true;
+            }
         }
-        return Msg.wParam;
+        DestroyWindow(hwnd);
+        UnregisterClass(g_szClassName, hInstance);
+        return 0;
     }
-}
+//}
 
 int tick = 0;
 COLORREF *arr;
+
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     //TEXT can be STATIC, BUTTON or TEXT
@@ -74,36 +83,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             cpu = CPU::getInstance();
             ppu = PPU::getInstance();
             arr = (COLORREF *) malloc(256*224 * sizeof(COLORREF));
-            SetTimer(hwnd, 1, USER_TIMER_MINIMUM, NULL);
+            SetTimer(hwnd, 1, 16, (TIMERPROC) &vBlank);
             break;
         case WM_TIMER: {
-            tick++;
-            int cnt = 0;
-            int line = 0;
-            while (line != 300) {
-                cpu->executeInstruction();
-                if (cnt % 400 == 0) {
-                    if (line < 225) {
-                        Scanline scanline = ppu->HBlank(line);
-                        Pixel *pixels = scanline.getPixels();
-                        for (int i = 0; i<256; ++i) {
-                            arr[i + line*256] = pixels[i].getRGBColor();
-                        }
-                    }
-                    line++;
-                }
-                cnt++;
-            }
-            cpu->NMI();
-            HDC hdc = GetDC(hwnd);
-            HBITMAP map = CreateBitmap(256, 224, 1, 8*4, (void *) arr);
-            HDC src = CreateCompatibleDC(hdc);
-            SelectObject(src, map);
-            BitBlt(hdc, 0, 0, 256, 224, src, 0, 0, SRCCOPY);
-            DeleteObject(map);
-            DeleteDC(src);
-            ReleaseDC(NULL, hdc);
-            //free(arr);
+            vBlank();
             break;
         }
         case WM_CLOSE:
@@ -118,4 +101,39 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             return DefWindowProc(hwnd, msg, wParam, lParam);
     }
     return 0;
+}
+
+Scanline scanline;
+
+void vBlank() {
+    tick++;
+    int cnt = 0;
+    int line = 0;
+    while (line != 300) {
+        cpu->executeInstruction();
+        if (cnt % 400 == 0) {
+            if (line < 224) {
+                scanline = ppu->HBlank(line);
+                Pixel *pixels = scanline.getPixels();
+                for (int i = 0; i<256; ++i) {
+                    arr[i + line*256] = pixels[i].getRGBColor();
+                }
+            }
+            line++;
+        }
+        cnt++;
+    }
+    short xState = GetAsyncKeyState(0x58);
+    if ((xState >> 15) & 1) cout << "x key press" << endl;
+    cpu->NMI();
+    HDC hdc = GetDC(hwnd);
+    HBITMAP map = CreateBitmap(256, 224, 1, 8*4, (void *) arr);
+    HDC src = CreateCompatibleDC(hdc);
+    SelectObject(src, map);
+    BitBlt(hdc, 0, 0, 256, 224, src, 0, 0, SRCCOPY);
+    DeleteObject(map);
+    DeleteDC(src);
+    ReleaseDC(NULL, hdc);
+    //free(arr);
+
 }

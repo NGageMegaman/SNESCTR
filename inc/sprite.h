@@ -21,6 +21,7 @@ class Sprite {
         byte_t getPriority();
         bool getHFlip();
         bool getVFlip();
+        bool getSize();
         byte_t getSizeX();
         byte_t getSizeY();
         longw getNameTableAddress();
@@ -32,6 +33,7 @@ class Sprite {
         byte_t palette;
         byte_t priority;
         bool hFlip, vFlip;
+        bool size;
         byte_t sizeX, sizeY;
 
         CharacterParams *characterParams;

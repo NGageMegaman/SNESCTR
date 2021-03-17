@@ -81,7 +81,7 @@ byte_t Mem::readByte(longw address) {
         //case 0x2135: readData = ->readMPYM(); break;
         //case 0x2136: readData = ->readMPYH(); break;
         //case 0x2137: readData = ->readSLHV(); break;
-        //case 0x2138: readData = ->readOAMDATA(); break;
+        case 0x2138: readData = oam->readOAMDATA(); break;
         case 0x2139: readData = vram->readVMDATAL(); break;
         case 0x213a: readData = vram->readVMDATAH(); break;
         case 0x213b: readData = cgram->readCGDATA(); break;

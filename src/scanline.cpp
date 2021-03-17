@@ -10,7 +10,7 @@ Scanline::Scanline() {
 
 void Scanline::setTilePixels(int x, int size, Pixel *tilePixels) {
     for (int i = 0; i<size; ++i) {
-        if ((x + i) < 256) {
+        if ((x + i) < 256 && tilePixels[i].getBGRColor() != TRANSPARENT) {
             pixels[(x + i)].setColor(tilePixels[i].getBGRColor());
             pixels[(x + i)].setPriority(tilePixels[i].getPriority());
         }

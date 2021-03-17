@@ -80,8 +80,44 @@ void OAM::writeOAMDATA(byte_t data) {
 }
 
 byte_t OAM::readOAMDATA() {
-    //TBI
-    return 0;
+    byte_t data = 0;
+    longw spriteAddress, x;
+    if (incrementedAddress < 0x200) {
+        //LOW TABLE
+        spriteAddress = incrementedAddress / 4;
+        switch (incrementedAddress % 4) {
+            case 0:
+                data = (sprites[spriteAddress].getX() & 0x0ff);
+                break;
+            case 1:
+                data = sprites[spriteAddress].getY();
+                break;
+            case 2:
+                data = sprites[spriteAddress].getFirstTile();
+                break;
+            case 3: 
+                data = (
+                    (sprites[spriteAddress].getVFlip()    << 7) |
+                    (sprites[spriteAddress].getHFlip()    << 6) |
+                    (sprites[spriteAddress].getPriority() << 5) |
+                    (sprites[spriteAddress].getPalette()  << 3) |
+                    (sprites[spriteAddress].getNameTable()    )
+                    );
+                break;
+        }
+    }
+    else {
+        //HIGH TABLE
+        spriteAddress = (incrementedAddress - 512) * 4;
+        for (int i = 0; i<4; ++i) {
+            data = data | (
+                (sprites[spriteAddress + i].getX() << (2*i)) |
+                (sprites[spriteAddress + i].getSize() << ((2*i)+1))
+            );
+        }
+    }
+    incrementedAddress++;
+    return data;
 }
 
 Sprite *OAM::getSpritesRow(int line, int &size) {
@@ -90,7 +126,7 @@ Sprite *OAM::getSpritesRow(int line, int &size) {
     for (int i = 0; i < OAM_NUM_SPRITES; ++i) {
         y0 = sprites[i].getY();
         y1 = y0 + sprites[i].getSizeY();
-        if (line >= y0 && line <= y1) {
+        if (line >= y0 && line < y1) {
             row[size] = sprites[i];
             size++;
         }
