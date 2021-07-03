@@ -35,7 +35,7 @@ class ScanlineRenderer {
         longw tilemapAddress, characterAddress;
         bool tilemapHMirror, tilemapVMirror;
         longw hScroll, vScroll;
-        bool mosaic;
+        byte_t mosaic;
         longw tileSizeX, tileSizeY;
         byte_t BGMode, bpp;
         longw paletteAddress;

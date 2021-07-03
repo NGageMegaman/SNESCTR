@@ -255,7 +255,7 @@ void ProcStatUnit::XCE(longw operand, longw address) {
     bool newE = regfile->readP(PFlags_t::CARRY_FLAG);
     regfile->writeP(PFlags_t::CARRY_FLAG, newC);
     regfile->writeP(PFlags_t::EMULATION_FLAG, newE);
-    if (!newE) {
+    if (newE) {
         regfile->writeP(PFlags_t::ACCUMULATOR_FLAG, true);
         regfile->writeP(PFlags_t::INDEX_FLAG, true);
     }

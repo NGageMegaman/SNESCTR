@@ -27,7 +27,7 @@ OAM *OAM::getInstance() {
 ////////////////////////////////////////////////////////////////////////
 
 void OAM::writeOAMADDL(byte_t data) {
-    address = (address & 0x1ff) | data;
+    address = (address & 0x100) | data;
     incrementedAddress = address << 1; 
 }
 
@@ -76,7 +76,7 @@ void OAM::writeOAMDATA(byte_t data) {
             sprites[spriteAddress + i].setSize((data >> (1 + (2*i))) & 1);
         }
     }
-    incrementedAddress++;
+    incrementedAddress = (incrementedAddress + 1) % 544;
 }
 
 byte_t OAM::readOAMDATA() {
@@ -116,8 +116,12 @@ byte_t OAM::readOAMDATA() {
             );
         }
     }
-    incrementedAddress++;
+    incrementedAddress = (incrementedAddress + 1) % 544;
     return data;
+}
+
+void OAM::invalidateAddress() {
+    incrementedAddress = address << 1;
 }
 
 Sprite *OAM::getSpritesRow(int line, int &size) {

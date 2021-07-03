@@ -67,7 +67,7 @@ void BackgroundParams::writeMOSAIC(byte_t data) {
     BG2Mosaic = (data >> 1) & 1;
     BG3Mosaic = (data >> 2) & 1;
     BG4Mosaic = (data >> 3) & 1;
-    mosaicSize = (data >> 4) & 0x0f;
+    mosaicSize = ((data >> 4) & 0x0f) + 1;
 }
 
 void BackgroundParams::writeBG1SC(byte_t data) {
@@ -449,4 +449,7 @@ void BackgroundParams::initBppMatrix() {
     bppMatrix[26] = 0;
     bppMatrix[27] = 0;
     bppMatrix[28] = 8;
+    bppMatrix[29] = 0;
+    bppMatrix[30] = 0;
+    bppMatrix[31] = 0;
 }

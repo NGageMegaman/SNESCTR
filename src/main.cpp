@@ -111,7 +111,7 @@ void vBlank() {
     int line = 0;
     while (line != 300) {
         cpu->executeInstruction();
-        if (cnt % 400 == 0) {
+        if (cnt % 600 == 0) {
             if (line < 224) {
                 scanline = ppu->HBlank(line);
                 Pixel *pixels = scanline.getPixels();
@@ -123,8 +123,9 @@ void vBlank() {
         }
         cnt++;
     }
-    short xState = GetAsyncKeyState(0x58);
-    if ((xState >> 15) & 1) cout << "x key press" << endl;
+    //short xState = GetAsyncKeyState(0x58);
+    //if ((xState >> 15) & 1) cout << "x key press" << endl;
+    ppu->VBlank();
     cpu->NMI();
     HDC hdc = GetDC(hwnd);
     HBITMAP map = CreateBitmap(256, 224, 1, 8*4, (void *) arr);

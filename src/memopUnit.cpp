@@ -236,7 +236,7 @@ void MemopUnit::TRB(longw operand, longw address) {
 
 void MemopUnit::TSB(longw operand, longw address) {
     //Test and Set memory Bits against A
-    word result = operand & regfile->readA();
+    word result = operand | regfile->readA();
     if (regfile->isLargeA()) mem->writeWord(address, result);
     else mem->writeByte(address, result);
     procFlagUnit->zeroFlagA(operand & regfile->readA());

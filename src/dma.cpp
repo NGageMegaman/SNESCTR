@@ -113,7 +113,7 @@ void DMA::dmaEnable(byte_t channel) {
                 break;
             case 0b011: case 0b111:
                 // B0 -> r0, B1 -> r0, B2 -> r1, B3 -> r1
-                if (bytes % 4 >= 2) B++;
+                B += ((bytes % 4 ) / 2);
                 break;
             case 0b100:
                 // B0 -> r0, B1 -> r1, B2 -> r2, B3 -> r3

@@ -31,17 +31,20 @@ void CPU::executeInstruction() {
     uint32_t operand, address;
     decoder->decode(inst, &operand, &address);
     //Step 3: Execute the instruction
-    //if (regfile->readPC() == 0x8a64) cout << "CPX" << std::hex << address << " " << operand << " " << regfile->readX() << endl;
     executionUnit->execute(inst, operand, address);
 
     //Debug
-    //if (((regfile->readPB() << 16) | regfile->readPC()) == 0x5d83e) debug = true;
+    
+    //if (((regfile->readPB() << 16) | regfile->readPC()) == 0x9e85) debug = true;
+    //else debug = false;
     //if (address == 0x65) debug = true;
-    if (debug) {
-        cout << "Mem[0x7e0109] = " << std::hex << (int) mem->readLong(0x7e0109) << endl;
+    if (regfile->readPC() < 0x8000 || debug) {
+        //cout << "Mem[0x7e0109] = " << std::hex << (int) mem->readLong(0x7e0109) << endl;
         //cout << "DP = " << std::hex << (int) regfile->readDP() << endl;
         cout << "PCprev: " << std::hex << (int) PCprev << endl;
         cout << "PC: " << std::hex << (int) regfile->readPB() << (int) regfile->readPC() << " A: " << (int) regfile->readA() << " X: " << (int) regfile->readX() << " Y: " << (int) regfile->readY() << " DB: " << (int) regfile->readDB() << " inst = " << (int) inst << endl;
+        cout << "PStat: " << std::hex << (int) regfile->readPAll() << endl;
+        cout << "SP: " << std::hex << (int) regfile->readSP() << endl;
     }
 }
 

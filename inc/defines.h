@@ -3,6 +3,7 @@
 #include <fstream>
 #include <map>
 #include <vector>
+#include <windows.h>
 #pragma once
 using namespace std;
 
@@ -35,7 +36,12 @@ const longw HEADER_SIZE = 0x1e;
 
 const byte_t OAM_NUM_SPRITES = 128;
 
-const word  TRANSPARENT = 0xffff;
+const word  COLOR_TRANSPARENT = 0xffff;
+
+const byte_t A_KEY = 0x41;
+const byte_t S_KEY = 0x53;
+const byte_t X_KEY = 0x58;
+const byte_t Z_KEY = 0x5a;
 
 struct ProcessorStatus {
     bool C, Z, V, N, D, E, M, X, I, B;
@@ -45,31 +51,6 @@ enum PFlags_t {
     CARRY_FLAG, ZERO_FLAG, OVERFLOW_FLAG, NEGATIVE_FLAG,
     DECIMAL_FLAG, EMULATION_FLAG, ACCUMULATOR_FLAG,
     INDEX_FLAG, INTERRUPT_FLAG, BREAKPOINT_FLAG
-};
-
-enum addr_mode_t {
-    IMPLIED,
-    IMMEDIATE,
-    RELATIVE,
-    RELATIVE_LONG,
-    DIRECT,
-    DIRECT_INDEXED,
-    DIRECT_INDIRECT,
-    DIRECT_INDEXED_INDIRECT,
-    DIRECT_INDIRECT_INDEXED,
-    DIRECT_INDIRECT_LONG,
-    DIRECT_INDIRECT_LONG_INDEXED,
-    ABSOLUTE,
-    ABSOLUTE_INDEXED,
-    ABSOLUTE_LONG,
-    ABSOLUTE_INDEXED_LONG,
-    STACK_RELATIVE,
-    STACK_RELATIVE_INDIRECT_INDEXED,
-    ABSOLUTE_INDIRECT,
-    ABSOLUTE_INDIRECT_LONG,
-    ABSOLUTE_INDEXED_INDIRECT,
-    IMPLIED_ACCUMULATOR,
-    BLOCK_MOVE
 };
 
 enum inst_t {

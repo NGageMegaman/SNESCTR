@@ -14,6 +14,8 @@ Mem::Mem() {
     cgram = CGRAM::getInstance();
     oam = OAM::getInstance();
     dma = DMA::getInstance(this);
+    joypad = Joypad::getInstance();
+    muldiv = Muldiv::getInstance();
     initMem();
 }
 
@@ -77,15 +79,23 @@ byte_t Mem::readByte(longw address) {
     byte_t readData;
     byte_t channel = (mirroredAddress >> 4) & 0x0f;
     switch (mirroredAddress) {
-        //case 0x2134: readData = ->readMPYL(); break;
-        //case 0x2135: readData = ->readMPYM(); break;
-        //case 0x2136: readData = ->readMPYH(); break;
         //case 0x2137: readData = ->readSLHV(); break;
         case 0x2138: readData = oam->readOAMDATA(); break;
         case 0x2139: readData = vram->readVMDATAL(); break;
         case 0x213a: readData = vram->readVMDATAH(); break;
         case 0x213b: readData = cgram->readCGDATA(); break;
         case 0x2180: readData = wram->readWMDATA(); break;
+        case 0x4214: readData = muldiv->readRDDIVL(); break;
+        case 0x4215: readData = muldiv->readRDDIVH(); break;
+        case 0x4216: readData = muldiv->readRDMPYL(); break;
+        case 0x4217: readData = muldiv->readRDMPYH(); break;
+        case 0x4016: readData = joypad->readJOYSER0(); break;
+        case 0x4017: readData = joypad->readJOYSER1(); break;
+        case 0x4212: readData = joypad->readHVBJOY(); break;
+        case 0x4218: readData = joypad->readJOY1L(); break;
+        case 0x4219: readData = joypad->readJOY1H(); break;
+        case 0x421a: readData = joypad->readJOY2L(); break;
+        case 0x421b: readData = joypad->readJOY2H(); break;
         case 0x4300: case 0x4310: case 0x4320: case 0x4330:
         case 0x4340: case 0x4350: case 0x4360: case 0x4370:
             readData = dma->readDMAPx(channel); break;
@@ -125,7 +135,7 @@ void Mem::writeByte(longw address, byte_t operand) {
         case 0x2103: oam->writeOAMADDH(operand); break;
         case 0x2104: oam->writeOAMDATA(operand); break;
         case 0x2105: backgroundParams->writeBGMODE(operand); break;
-        //case 0x2106: ->writeMOSAIC(operand); break;
+        case 0x2106: backgroundParams->writeMOSAIC(operand); break;
         case 0x2107: backgroundParams->writeBG1SC(operand); break;
         case 0x2108: backgroundParams->writeBG2SC(operand); break;
         case 0x2109: backgroundParams->writeBG3SC(operand); break;
@@ -175,6 +185,13 @@ void Mem::writeByte(longw address, byte_t operand) {
         case 0x2181: wram->writeWMADDL(operand); break;
         case 0x2182: wram->writeWMADDM(operand); break;
         case 0x2183: wram->writeWMADDH(operand); break;
+        case 0x4016: joypad->writeJOYSER0(operand); break;
+        case 0x4200: joypad->writeNMITIMEN(operand); break;
+        case 0x4202: muldiv->writeWRMPYA(operand); break;
+        case 0x4203: muldiv->writeWRMPYB(operand); break;
+        case 0x4204: muldiv->writeWRDIVL(operand); break;
+        case 0x4205: muldiv->writeWRDIVH(operand); break;
+        case 0x4206: muldiv->writeWRDIVB(operand); break;
         case 0x420b: dma->writeMDMA(operand); break;
         case 0x4300: case 0x4310: case 0x4320: case 0x4330:
         case 0x4340: case 0x4350: case 0x4360: case 0x4370:

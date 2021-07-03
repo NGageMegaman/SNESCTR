@@ -13,6 +13,7 @@ class OAM {
         void writeOAMADDH(byte_t data);
         void writeOAMDATA(byte_t data);
         byte_t readOAMDATA();
+        void invalidateAddress();
         Sprite *getSpritesRow(int line, int &size);
     private:
         longw address;

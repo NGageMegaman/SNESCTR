@@ -1,5 +1,4 @@
 #include "defines.h"
-#include <windows.h>
 
 class App {
     protected:

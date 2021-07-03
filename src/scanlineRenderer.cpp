@@ -19,9 +19,9 @@ ScanlineRenderer *ScanlineRenderer::getInstance() {
 }
 
 Scanline ScanlineRenderer::getScanline(int scanlineNumber, int background, Scanline &scanline) {
-    scanline.setRow(TRANSPARENT);
+    scanline.setRow(COLOR_TRANSPARENT);
     getBackgroundParams(background);
-    longw numberTiles = (256 / tileSizeX) + 1;
+    longw numberTiles = (256 / tileSizeX) + 2;
     longw line = (scanlineNumber + vScroll)%512;
     for (longw i = 0; i<numberTiles; ++i) {
         word tileWord = getTileWord(i, line);
@@ -36,7 +36,7 @@ Scanline ScanlineRenderer::getScanline(int scanlineNumber, int background, Scanl
 Scanline ScanlineRenderer::getOBJScanline(int scanlineNumber) {
     //TODO: Coment and better this. It's a fucking mess
     static Scanline scanline = Scanline();
-    scanline.setRow(TRANSPARENT);
+    scanline.setRow(COLOR_TRANSPARENT);
     int size = 0;
     Sprite *sprites = oam->getSpritesRow(scanlineNumber, size);
     for (int i = 0; i<size; ++i) {
@@ -109,9 +109,11 @@ Tile ScanlineRenderer::buildTile(word tileWord, int lineNumber) {
     tile.setParams(tileSizeX, tileNumber, palette, priority, hFlip, vFlip);
 
     //If tile is 16x16, we build 4 tiles
+    //TODO: Support 16x16 mosaic, involves adjusting ty and tx
     int ty = (lineNumber%tileSizeY)/8;
     int i = (lineNumber%8);
     if (vFlip) i = tileSizeY - 1 - i;
+    int y = i - (i % mosaic);
     for (int tx = 0; tx<tileSizeX/8; ++tx) {
         //for (int ty = 0; ty<tileSizeY/8; ++ty) {
             longw tileSubNumber = tileNumber + tx + (16*ty);
@@ -119,14 +121,15 @@ Tile ScanlineRenderer::buildTile(word tileWord, int lineNumber) {
 
             //for (int i = 0; i<8; ++i) {
                 for (int j = 0; j<8; ++j) {
+                    int x = j - (j % mosaic);
                     byte_t cgIndex = 0;
                     for (int plane = 0; plane < bpp; plane += 2) {
-                        longw planeAddress = tileAddress + (4*plane) + i;
+                        longw planeAddress = tileAddress + (4*plane) + y;
                         word planes = vram->read(planeAddress);
                         byte_t planeL = planes & 0x00ff;
                         byte_t planeH = (planes >> 8) & 0x00ff;
-                        planeL = (planeL >> 7-j) & 1;
-                        planeH = ((planeH >> 7-j) & 1) << 1;
+                        planeL = (planeL >> 7-x) & 1;
+                        planeH = ((planeH >> 7-x) & 1) << 1;
                         cgIndex |= (planeH | planeL) << plane;
                     }
                     word color;

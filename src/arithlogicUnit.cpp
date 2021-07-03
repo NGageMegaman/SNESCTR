@@ -27,7 +27,7 @@ void ArithlogicUnit::ADC(longw operand, longw address) {
 
     word result = result_part + regfile->readP(PFlags_t::CARRY_FLAG);
     if (!regfile->isLargeA()) result &= 0x00ff;
-    if (result < regfile->readA()) isCarry = true;
+    if (result < result_part) isCarry = true;
 
     procFlagUnit->zeroFlagA(result);
     procFlagUnit->overflowFlagADC(operand, result);
@@ -193,11 +193,11 @@ void ArithlogicUnit::LSR_mem(longw operand, longw address) {
     word result;
     if (regfile->isLargeA()) {
         result = (operand >> 1) & 0x7fff;
-        mem->writeWord(address, operand);
+        mem->writeWord(address, result);
     }
     else {
         result = (operand >> 1) & 0x007f;
-        mem->writeByte(address, operand);
+        mem->writeByte(address, result);
     }
 
     procFlagUnit->zeroFlagA(result);
@@ -262,7 +262,7 @@ void ArithlogicUnit::ROR_mem(longw operand, longw address) {
        mem->writeWord(address, result);
     }
     else {
-       result = ((regfile->readA() >> 1) & 0x007f) | (regfile->readP(PFlags_t::CARRY_FLAG) << 7); 
+       result = ((operand >> 1) & 0x007f) | (regfile->readP(PFlags_t::CARRY_FLAG) << 7); 
        mem->writeByte(address, result);
     }
 

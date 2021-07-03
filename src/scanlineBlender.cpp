@@ -53,40 +53,40 @@ Scanline ScanlineBlender::blendMode0(Scanline *layers) {
         p3 = layers[2].getPixel(i).getPriority();
         p4 = layers[3].getPixel(i).getPriority();
         po = layers[4].getPixel(i).getPriority();
-        if (co != TRANSPARENT && po == 3) {
+        if (co != COLOR_TRANSPARENT && po == 3) {
             c = co;
         }
-        else if (c1 != TRANSPARENT && p1) {
+        else if (c1 != COLOR_TRANSPARENT && p1) {
             c = c1;
         }
-        else if (c2 != TRANSPARENT && p2) {
+        else if (c2 != COLOR_TRANSPARENT && p2) {
             c = c2;
         }
-        else if (co != TRANSPARENT && po == 2) {
+        else if (co != COLOR_TRANSPARENT && po == 2) {
             c = co;
         }
-        else if (c1 != TRANSPARENT && !p1) {
+        else if (c1 != COLOR_TRANSPARENT && !p1) {
             c = c1;
         }
-        else if (c2 != TRANSPARENT && !p2) {
+        else if (c2 != COLOR_TRANSPARENT && !p2) {
             c = c2;
         }
-        else if (co != TRANSPARENT && po == 1) {
+        else if (co != COLOR_TRANSPARENT && po == 1) {
             c = co;
         }
-        else if (c3 != TRANSPARENT && p3) {
+        else if (c3 != COLOR_TRANSPARENT && p3) {
             c = c3;
         }
-        else if (c4 != TRANSPARENT && p4) {
+        else if (c4 != COLOR_TRANSPARENT && p4) {
             c = c4;
         }
-        else if (co != TRANSPARENT && po == 0) {
+        else if (co != COLOR_TRANSPARENT && po == 0) {
             c = co;
         }
-        else if (c3 != TRANSPARENT && !p3) {
+        else if (c3 != COLOR_TRANSPARENT && !p3) {
             c = c3;
         }
-        else if (c4 != TRANSPARENT && !p4) {
+        else if (c4 != COLOR_TRANSPARENT && !p4) {
             c = c4;
         }
         else c = 0;
@@ -109,37 +109,37 @@ Scanline ScanlineBlender::blendMode1(Scanline *layers) {
         p2 = layers[1].getPixel(i).getPriority();
         p3 = layers[2].getPixel(i).getPriority();
         po = layers[4].getPixel(i).getPriority();
-        if (c3 != TRANSPARENT && p3 == 1 && prio3 == 1) {
+        if (c3 != COLOR_TRANSPARENT && p3 == 1 && prio3 == 1) {
             c = c3;
         }
-        else if (co != TRANSPARENT && po == 3) {
+        else if (co != COLOR_TRANSPARENT && po == 3) {
             c = co;
         }
-        else if (c1 != TRANSPARENT && p1 == 1) {
+        else if (c1 != COLOR_TRANSPARENT && p1 == 1) {
             c = c1;
         }
-        else if (c2 != TRANSPARENT && p2 == 1) {
+        else if (c2 != COLOR_TRANSPARENT && p2 == 1) {
             c = c2;
         }
-        else if (co != TRANSPARENT && po == 2) {
+        else if (co != COLOR_TRANSPARENT && po == 2) {
             c = co;
         }
-        else if (c1 != TRANSPARENT && p1 == 0) {
+        else if (c1 != COLOR_TRANSPARENT && p1 == 0) {
             c = c1;
         }
-        else if (c2 != TRANSPARENT && p2 == 0) {
+        else if (c2 != COLOR_TRANSPARENT && p2 == 0) {
             c = c2;
         }
-        else if (co != TRANSPARENT && po == 1) {
+        else if (co != COLOR_TRANSPARENT && po == 1) {
             c = co;
         }
-        else if (c3 != TRANSPARENT && p3 == 1 && prio3 == 0) {
+        else if (c3 != COLOR_TRANSPARENT && p3 == 1 && prio3 == 0) {
             c = c3;
         }
-        else if (co != TRANSPARENT && po == 0) {
+        else if (co != COLOR_TRANSPARENT && po == 0) {
             c = co;
         }
-        else if (c3 != TRANSPARENT && p3 == 0) {
+        else if (c3 != COLOR_TRANSPARENT && p3 == 0) {
             c = c3;
         }
         else c = 0;
@@ -154,19 +154,19 @@ Scanline ScanlineBlender::blendMode2(Scanline *layers) {
     for (int i = 0; i<256; ++i) {
         p1 = layers[0].getPixel(i);
         p2 = layers[1].getPixel(i);
-        if (p1.getBGRColor() != TRANSPARENT && p1.getPriority()) {
+        if (p1.getBGRColor() != COLOR_TRANSPARENT && p1.getPriority()) {
             p = p1;
         }
-        else if (p2.getBGRColor() != TRANSPARENT && p2.getPriority()) {
+        else if (p2.getBGRColor() != COLOR_TRANSPARENT && p2.getPriority()) {
             p = p2;
         }
-        else if (p1.getBGRColor() != TRANSPARENT && !p1.getPriority()) {
+        else if (p1.getBGRColor() != COLOR_TRANSPARENT && !p1.getPriority()) {
             p = p1;
         }
-        else if (p2.getBGRColor() != TRANSPARENT && !p2.getPriority()) {
+        else if (p2.getBGRColor() != COLOR_TRANSPARENT && !p2.getPriority()) {
             p = p2;
         }
-        else p.setColor(TRANSPARENT);
+        else p.setColor(COLOR_TRANSPARENT);
         p.setColor(applyBrightness(p.getBGRColor()));
         scanline.setPixel(i, p);
     }
@@ -179,19 +179,19 @@ Scanline ScanlineBlender::blendMode3(Scanline *layers) {
     for (int i = 0; i<256; ++i) {
         p1 = layers[0].getPixel(i);
         p2 = layers[1].getPixel(i);
-        if (p1.getBGRColor() != TRANSPARENT && p1.getPriority()) {
+        if (p1.getBGRColor() != COLOR_TRANSPARENT && p1.getPriority()) {
             p = p1;
         }
-        else if (p2.getBGRColor() != TRANSPARENT && p2.getPriority()) {
+        else if (p2.getBGRColor() != COLOR_TRANSPARENT && p2.getPriority()) {
             p = p2;
         }
-        else if (p1.getBGRColor() != TRANSPARENT && !p1.getPriority()) {
+        else if (p1.getBGRColor() != COLOR_TRANSPARENT && !p1.getPriority()) {
             p = p1;
         }
-        else if (p2.getBGRColor() != TRANSPARENT && !p2.getPriority()) {
+        else if (p2.getBGRColor() != COLOR_TRANSPARENT && !p2.getPriority()) {
             p = p2;
         }
-        else p.setColor(TRANSPARENT);
+        else p.setColor(COLOR_TRANSPARENT);
         p.setColor(applyBrightness(p.getBGRColor()));
         scanline.setPixel(i, p);
     }
@@ -204,19 +204,19 @@ Scanline ScanlineBlender::blendMode4(Scanline *layers) {
     for (int i = 0; i<256; ++i) {
         p1 = layers[0].getPixel(i);
         p2 = layers[1].getPixel(i);
-        if (p1.getBGRColor() != TRANSPARENT && p1.getPriority()) {
+        if (p1.getBGRColor() != COLOR_TRANSPARENT && p1.getPriority()) {
             p = p1;
         }
-        else if (p2.getBGRColor() != TRANSPARENT && p2.getPriority()) {
+        else if (p2.getBGRColor() != COLOR_TRANSPARENT && p2.getPriority()) {
             p = p2;
         }
-        else if (p1.getBGRColor() != TRANSPARENT && !p1.getPriority()) {
+        else if (p1.getBGRColor() != COLOR_TRANSPARENT && !p1.getPriority()) {
             p = p1;
         }
-        else if (p2.getBGRColor() != TRANSPARENT && !p2.getPriority()) {
+        else if (p2.getBGRColor() != COLOR_TRANSPARENT && !p2.getPriority()) {
             p = p2;
         }
-        else p.setColor(TRANSPARENT);
+        else p.setColor(COLOR_TRANSPARENT);
         p.setColor(applyBrightness(p.getBGRColor()));
         scanline.setPixel(i, p);
     }
@@ -229,19 +229,19 @@ Scanline ScanlineBlender::blendMode5(Scanline *layers) {
     for (int i = 0; i<256; ++i) {
         p1 = layers[0].getPixel(i);
         p2 = layers[1].getPixel(i);
-        if (p1.getBGRColor() != TRANSPARENT && p1.getPriority()) {
+        if (p1.getBGRColor() != COLOR_TRANSPARENT && p1.getPriority()) {
             p = p1;
         }
-        else if (p2.getBGRColor() != TRANSPARENT && p2.getPriority()) {
+        else if (p2.getBGRColor() != COLOR_TRANSPARENT && p2.getPriority()) {
             p = p2;
         }
-        else if (p1.getBGRColor() != TRANSPARENT && !p1.getPriority()) {
+        else if (p1.getBGRColor() != COLOR_TRANSPARENT && !p1.getPriority()) {
             p = p1;
         }
-        else if (p2.getBGRColor() != TRANSPARENT && !p2.getPriority()) {
+        else if (p2.getBGRColor() != COLOR_TRANSPARENT && !p2.getPriority()) {
             p = p2;
         }
-        else p.setColor(TRANSPARENT);
+        else p.setColor(COLOR_TRANSPARENT);
         p.setColor(applyBrightness(p.getBGRColor()));
         scanline.setPixel(i, p);
     }
@@ -253,13 +253,13 @@ Scanline ScanlineBlender::blendMode6(Scanline *layers) {
     Pixel p1, p;
     for (int i = 0; i<256; ++i) {
         p1 = layers[0].getPixel(i);
-        if (p1.getBGRColor() != TRANSPARENT && p1.getPriority()) {
+        if (p1.getBGRColor() != COLOR_TRANSPARENT && p1.getPriority()) {
             p = p1;
         }
-        else if (p1.getBGRColor() != TRANSPARENT && !p1.getPriority()) {
+        else if (p1.getBGRColor() != COLOR_TRANSPARENT && !p1.getPriority()) {
             p = p1;
         }
-        else p.setColor(TRANSPARENT);
+        else p.setColor(COLOR_TRANSPARENT);
         p.setColor(applyBrightness(p.getBGRColor()));
         scanline.setPixel(i, p);
     }

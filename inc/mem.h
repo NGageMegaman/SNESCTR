@@ -9,6 +9,8 @@
 #include "vram.h"
 #include "cgram.h"
 #include "oam.h"
+#include "joypad.h"
+#include "muldiv.h"
 #pragma once
 using namespace std;
 
@@ -43,5 +45,7 @@ class Mem {
         CGRAM *cgram;
         DMA *dma;
         OAM *oam;
+        Joypad *joypad;
+        Muldiv *muldiv;
         byte_t memory[0x1000000];
 };

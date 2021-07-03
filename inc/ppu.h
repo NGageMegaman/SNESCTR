@@ -12,9 +12,11 @@ class PPU {
     public:
         static PPU *getInstance();
         Scanline HBlank(int line);
+        void VBlank();
     private:
         Scanline layers[5];
         ScanlineRenderer *scanlineRenderer;
         ScanlineBlender *scanlineBlender;
+        OAM *oam;
         App *app;
 };

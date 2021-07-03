@@ -2,6 +2,7 @@
 using namespace std;
 
 PPU::PPU() {
+    oam = OAM::getInstance();
     scanlineRenderer = ScanlineRenderer::getInstance();
     scanlineBlender = ScanlineBlender::getInstance();
     app = App::getInstance();
@@ -27,4 +28,8 @@ Scanline PPU::HBlank(int line) {
     Scanline scanline = scanlineBlender->blendScanlines(layers);
     //Scanline scanline = scanlineRenderer->getScanline(line, 1);
     return scanline;
+}
+
+void PPU::VBlank() {
+    oam->invalidateAddress();
 }

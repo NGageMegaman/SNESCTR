@@ -4,13 +4,13 @@ using namespace std;
 Scanline::Scanline() {
     for (int i = 0; i<256; ++i) {
         pixels[i] = Pixel();
-        pixels[i].setColor(TRANSPARENT);
+        pixels[i].setColor(COLOR_TRANSPARENT);
     }
 }
 
 void Scanline::setTilePixels(int x, int size, Pixel *tilePixels) {
     for (int i = 0; i<size; ++i) {
-        if ((x + i) < 256 && tilePixels[i].getBGRColor() != TRANSPARENT) {
+        if ((x + i) < 256 && tilePixels[i].getBGRColor() != COLOR_TRANSPARENT) {
             pixels[(x + i)].setColor(tilePixels[i].getBGRColor());
             pixels[(x + i)].setPriority(tilePixels[i].getPriority());
         }
@@ -32,7 +32,7 @@ void Scanline::setRow(longw color) {
 }
 
 void Scanline::setPixel(int i, Pixel p) {
-    if (p.getBGRColor() != TRANSPARENT)
+    if (p.getBGRColor() != COLOR_TRANSPARENT)
     pixels[i] = p;
 }
 
