@@ -35,7 +35,8 @@ void CPU::executeInstruction() {
 
     //Debug
     
-    //if (((regfile->readPB() << 16) | regfile->readPC()) == 0x9e85) debug = true;
+    //if (((regfile->readPB() << 16) | regfile->readPC()) == 0x49384) debug = true;
+    //if (((regfile->readPB() << 16) | regfile->readPC()) == 0x49468) debug = true;
     //else debug = false;
     //if (address == 0x65) debug = true;
     if (regfile->readPC() < 0x8000 || debug) {

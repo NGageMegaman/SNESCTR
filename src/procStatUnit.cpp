@@ -20,7 +20,7 @@ void ProcStatUnit::BIT(longw operand, longw address) {
     //Bit Test
     word result = regfile->readA() & operand;
     procFlagUnit->zeroFlagA(result);
-    procFlagUnit->negativeFlagA(result);
+    procFlagUnit->negativeFlagA(operand);
     if (regfile->isLargeA()) {
         regfile->writeP(PFlags_t::OVERFLOW_FLAG, (operand >> 14) & 1);
     }

@@ -107,11 +107,11 @@ void ProcFlagUnit::carryFlagX(longw data) {
 void ProcFlagUnit::carryFlagCMP(longw reg, longw data, bool large) {
     PFlags_t flag = PFlags_t::CARRY_FLAG;
     if (large) {
-        if (reg >= (word) data) regfile->writeP(flag, true);
+        if ((word) reg >= (word) data) regfile->writeP(flag, true);
         else regfile->writeP(flag, false);
     }
     else {
-        if (reg >= (byte_t) data) regfile->writeP(flag, true);
+        if ((byte_t) reg >= (byte_t) data) regfile->writeP(flag, true);
         else regfile->writeP(flag, false);
     }
 }

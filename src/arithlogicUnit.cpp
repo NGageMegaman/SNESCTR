@@ -22,12 +22,16 @@ void ArithlogicUnit::ADC(longw operand, longw address) {
     bool isCarry = false;
 
     word result_part = regfile->readA() + operand;
-    if (!regfile->isLargeA()) result_part &= 0x00ff;
-    if (result_part < regfile->readA()) isCarry = true;
+    if (!regfile->isLargeA()) {
+        if ((byte_t) result_part < (byte_t) regfile->readA()) isCarry = true;
+    }
+    else if ((word) result_part < (word) regfile->readA()) isCarry = true;
 
     word result = result_part + regfile->readP(PFlags_t::CARRY_FLAG);
-    if (!regfile->isLargeA()) result &= 0x00ff;
-    if (result < result_part) isCarry = true;
+    if (!regfile->isLargeA()) {
+        if ((byte_t) result < (byte_t) result_part) isCarry = true;
+    }
+    else if ((word) result < (word) result_part) isCarry = true;
 
     procFlagUnit->zeroFlagA(result);
     procFlagUnit->overflowFlagADC(operand, result);

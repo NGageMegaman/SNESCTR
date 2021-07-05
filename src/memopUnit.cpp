@@ -177,6 +177,10 @@ void MemopUnit::PLP(longw operand, longw address) {
         regfile->writeP(PFlags_t::INDEX_FLAG, true);
         regfile->writeP(PFlags_t::ACCUMULATOR_FLAG, true);
     }
+    if (!regfile->isLargeIdx()) {
+        regfile->writeX(regfile->readX() & 0x00ff);
+        regfile->writeY(regfile->readY() & 0x00ff);
+    }
 }
 
 void MemopUnit::PLX(longw operand, longw address) {
